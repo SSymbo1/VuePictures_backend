@@ -1,0 +1,32 @@
+server:
+  port: 9090
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 30MB
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/web?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    username: root
+    password: 85208520
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS
+  file:
+    name: backend-log.log
+
+web:
+  user-photo-res-path: http://192.168.162.135:9090/resUser/
+  user-background-res-path: http://192.168.162.135:9090/resBk/
+  picture-data-res-path: http://192.168.162.135:9090/artWorks/
