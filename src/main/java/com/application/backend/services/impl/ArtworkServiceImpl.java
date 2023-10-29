@@ -1,11 +1,10 @@
 package com.application.backend.services.impl;
 
-import com.application.backend.entity.Artwork;
 import com.application.backend.entity.Artworks;
 import com.application.backend.entity.Favorite;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.UserMapper;
-import com.application.backend.services.ArtworkServices;
+import com.application.backend.services.ArtworkService;
 import com.application.backend.utils.FileUploadUtil;
 import com.application.backend.utils.JwtUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -13,7 +12,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,18 +22,21 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class ArtworkServiceImpl implements ArtworkServices {
+public class ArtworkServiceImpl implements ArtworkService {
     @Autowired
     private ArtWorkMapper artWorkMapper;
     @Autowired
     private UserMapper userMapper;
+
     @Value(("${web.picture-data-res-path}"))
     private String artWorksRes;
-    private String getJarFilePath() {
+    @Value(("${web.picture-data-res-path-compressed}"))
+    private String resCompressed;
+    /*private String getJarFilePath() {
         ApplicationHome home = new ApplicationHome(getClass());
         File jarFile = home.getSource();
         return jarFile.getParentFile().toString();
-    }
+    }*/
     @Override
     public List<Artworks> getAllArtworks() {
         List<Artworks> list=artWorkMapper.queryAllArtworks();
@@ -52,7 +53,7 @@ public class ArtworkServiceImpl implements ArtworkServices {
         IPage<Artworks> iPage=artWorkMapper.selectPage(page,null);
         List<Artworks> list=iPage.getRecords();
         for (Artworks artworks:list){
-            artworks.setPicture(artWorksRes+artworks.getPicture());
+            artworks.setPicture(resCompressed+artworks.getPicture());
             for (Favorite favorite:favoriteList){
                 if (artworks.getPid()==favorite.getPid()){
                     artworks.setLiked(true);
@@ -68,7 +69,6 @@ public class ArtworkServiceImpl implements ArtworkServices {
     @Override
     public List<Artworks> getRandArtworks(int num) {
         List<Artworks> list=artWorkMapper.queryRandArtworks(num);
-
         for (Artworks artworks:list){
             artworks.setPicture(artWorksRes+artworks.getPicture());
         }
@@ -104,7 +104,7 @@ public class ArtworkServiceImpl implements ArtworkServices {
         List<Artworks> list=artWorkMapper.queryArtworksByPid(pid);
         Artworks artworks=list.get(0);
         String format=artworks.getPicture().substring(artworks.getPicture().length()-3);
-        artworks.setPicture(getJarFilePath()+"\\SpringWebData"+"\\Res\\"+artworks.getPicture());
+        artworks.setPicture("D:"+"\\SpringWebData"+"\\Res\\"+artworks.getPicture());
         BufferedImage image=ImageIO.read(new File(artworks.getPicture()));
         ByteArrayOutputStream os=new ByteArrayOutputStream();
         ImageIO.write(image,format,os);

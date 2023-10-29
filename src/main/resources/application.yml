@@ -14,7 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/web?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
-    password: 85208520
+    password: 8520
 
 mybatis-plus:
   configuration:
@@ -27,6 +27,7 @@ logging:
     name: backend-log.log
 
 web:
-  user-photo-res-path: http://192.168.162.135:9090/resUser/
-  user-background-res-path: http://192.168.162.135:9090/resBk/
-  picture-data-res-path: http://192.168.162.135:9090/artWorks/
+  user-photo-res-path: http://localhost:9090/resUser/
+  user-background-res-path: http://localhost:9090/resBk/
+  picture-data-res-path: http://localhost:9090/artWorks/
+  picture-data-res-path-compressed: http://localhost:9090/resCompressed/

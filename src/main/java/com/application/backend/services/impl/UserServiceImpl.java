@@ -120,6 +120,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Integer> getFollowedUser(String token) {
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        return userMapper.queryFollowUser(uid);
+    }
+
+    @Override
     public boolean followUser(int uid, int fan) {
         if (userMapper.queryFollow(uid,fan).isEmpty()){
             return userMapper.insertIntoFollow(uid, fan)!=0;

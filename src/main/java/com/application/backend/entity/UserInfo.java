@@ -1,7 +1,10 @@
 package com.application.backend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 @TableName("userinfo")
@@ -14,6 +17,8 @@ public class UserInfo {
     private String sex;
     private long birthday;
     private String email;
+    @TableField(exist = false)
+    private List<Artworks> artworks;
 
     public UserInfo(int iid, String background, String userimage, String nickname, String self, String sex, long birthday, String email) {
         this.iid = iid;
@@ -37,6 +42,14 @@ public class UserInfo {
                 ", birthday=" + birthday +
                 ", email='" + email + '\'' +
                 '}';
+    }
+
+    public List<Artworks> getArtworks() {
+        return artworks;
+    }
+
+    public void setArtworks(List<Artworks> artworks) {
+        this.artworks = artworks;
     }
 
     public int getIid() {

@@ -63,4 +63,8 @@ public class UserController {
     public boolean followStatue(int uid,int fan){
         return userService.getFollowStatue(uid, fan);
     }
+    @GetMapping("/all_user_follower") //获取用户关注者集合，提供token，返回关注者
+    public List<Integer> getAllUserFollower(String token){
+        return userService.getFollowedUser(token);
+    }
 }

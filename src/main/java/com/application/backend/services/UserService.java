@@ -20,4 +20,5 @@ public interface UserService {
     Result userBackgroundChange(MultipartFile file, HttpServletRequest request);
     Result userTitleHeadChange(MultipartFile file, HttpServletRequest request);
     Result userSelfInfoChange(UserInfo userInfo);
+    List<Integer> getFollowedUser(String token);
 }

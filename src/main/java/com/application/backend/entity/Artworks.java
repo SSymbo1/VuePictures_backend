@@ -16,6 +16,8 @@ public class Artworks {
     private long lastviewtime;
     @TableField(exist = false)
     private boolean isLiked;
+    @TableField(exist = false)
+    private UserInfo userInfo;
 
     public Artworks(int pid, int uid, String picture, String subtitle, int likenum, long createtime, String introduce, long view, long lastviewtime) {
         this.pid = pid;
@@ -111,6 +113,14 @@ public class Artworks {
 
     public void setCreatetime(long createtime) {
         this.createtime = createtime;
+    }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
     public boolean isLiked() {

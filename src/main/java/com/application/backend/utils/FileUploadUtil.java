@@ -1,7 +1,6 @@
 package com.application.backend.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.system.ApplicationHome;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -12,21 +11,22 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class FileUploadUtil {
-    private final String ROOT_PATH=getJarFilePath();
+    private final String ROOT_PATH="D:";
     private final String USER_BACKGROUND_IMAGE_PATH=this.ROOT_PATH+"\\SpringWebData\\UserBk";
     private final String USER_TITLE_IMAGE_PATH=this.ROOT_PATH+"\\SpringWebData\\UserImg";
     private final String USER_SUBMIT_ARTWORK_PATH=this.ROOT_PATH+"\\SpringWebData\\Res";
-    private String getJarFilePath() {
+    /*private String getJarFilePath() {
         ApplicationHome home = new ApplicationHome(getClass());
         File jarFile = home.getSource();
         return jarFile.getParentFile().toString();
-    }
+    }*/
     public String uploadUserBackground(MultipartFile file){
         createFolderIfNotExist(USER_BACKGROUND_IMAGE_PATH);
         String filName= getUUIDFileName(file);
         try {
             byte[] bytes=file.getBytes();
             Files.write(Paths.get(USER_BACKGROUND_IMAGE_PATH+"\\"+filName),bytes);
+            ImgCompressUtil.imgSizeCompress(filName,USER_BACKGROUND_IMAGE_PATH);
         }catch (IOException e){
             e.printStackTrace();
             return "wrong";
@@ -39,6 +39,7 @@ public class FileUploadUtil {
         try {
             byte[] bytes=file.getBytes();
             Files.write(Paths.get(USER_TITLE_IMAGE_PATH+"\\"+filName),bytes);
+            ImgCompressUtil.imgSizeCompress(filName,USER_TITLE_IMAGE_PATH);
         }catch (IOException e){
             e.printStackTrace();
             return "wrong";
@@ -51,6 +52,7 @@ public class FileUploadUtil {
         try {
             byte[] bytes=file.getBytes();
             Files.write(Paths.get(USER_SUBMIT_ARTWORK_PATH+"\\"+filName),bytes);
+            ImgCompressUtil.imgSizeCompress(filName,USER_SUBMIT_ARTWORK_PATH);
         }catch (IOException e){
             e.printStackTrace();
             return "wrong";
