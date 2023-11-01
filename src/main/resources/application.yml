@@ -15,6 +15,27 @@ spring:
     url: jdbc:mysql://localhost:3306/web?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
     username: root
     password: 8520
+  session:
+    store-type: none
+  mail:
+    host: smtp.office365.com
+    port: 587
+    protocol: smtp
+    default-encoding: UTF-8
+    username: ssymbol_captcha_server@outlook.com
+    password: ozcvmzxxvsvoemsm
+    test-connection: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            socketFactory:
+              class: javax.net.ssl.SSLSocketFactory
+              fallback: false
+          starttls:
+            enable: true
+            required: true
 
 mybatis-plus:
   configuration:
@@ -31,3 +52,4 @@ web:
   user-background-res-path: http://localhost:9090/resBk/
   picture-data-res-path: http://localhost:9090/artWorks/
   picture-data-res-path-compressed: http://localhost:9090/resCompressed/
+  user-photo-res-path-compressed: http://localhost:9090/resUserCompressed/

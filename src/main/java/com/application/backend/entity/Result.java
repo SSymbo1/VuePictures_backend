@@ -42,6 +42,14 @@ public class Result {
         return result;
     }
 
+    public static Result register_error_captcha(){
+        Result result=new Result();
+        result.setSuccess(false);
+        result.setCode(ResultCode.REGISTER_ERROR_CAPTCHA);
+        result.setMessage("验证码错误!");
+        return result;
+    }
+
     public static Result register_exist(){
         Result result=new Result();
         result.setSuccess(false);
@@ -95,6 +103,21 @@ public class Result {
         result.setSuccess(false);
         result.setCode(ResultCode.UPDATE_USER_INFO_ERROR);
         result.setMessage("更新用户信息失败!");
+        return result;
+    }
+
+    public static Result email_error(){
+        Result result=new Result();
+        result.setSuccess(false);
+        result.setCode(ResultCode.EMAIL_ERROR);
+        result.setMessage("验证码邮件发送失败，检查邮件地址是否正确！");
+        return result;
+    }
+    public static Result email_success(){
+        Result result=new Result();
+        result.setSuccess(true);
+        result.setCode(ResultCode.EMAIL_SUCCESS);
+        result.setMessage("验证码邮件已发送！");
         return result;
     }
 

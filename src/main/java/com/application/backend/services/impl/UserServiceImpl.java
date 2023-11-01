@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,8 @@ public class UserServiceImpl implements UserService {
     private String photoRes;
     @Value(("${web.user-background-res-path}"))
     private String photoBackRes;
+    @Value(("${web.user-photo-res-path-compressed}"))
+    private String resUserCompressed;
     @Override
     public List<User> getUser(String username) {
         return null;
@@ -53,19 +56,18 @@ public class UserServiceImpl implements UserService {
     public Result userRegister(User user) {
         String token=JwtUtil.createJWT(user.getUsername());
         List<User> list=new ArrayList<>();
+        String captcha=user.getCode();
         long timestamp=System.currentTimeMillis();
         int code=0;
-        try {
+        list=userMapper.queryUser(user.getUsername());
+        if (list.isEmpty()&&captcha.equals(user.getCaptcha())){
             code = userMapper.insertIntoUser(user.getUsername(), user.getPassword(), 0, timestamp);
-            list=userMapper.queryUser(user.getUsername());
-        }catch (Exception e){
-            return Result.register_exist().data("token",token);
-        }
-        if (code!=0&&!list.isEmpty()){
-            int key=userMapper.insertIntoUserInfo(list.get(0).getUid(),"default.png","default.png","User","这个人很懒，没有个人简介哦","none",timestamp,"none");
+            int key=userMapper.insertIntoUserInfo(userMapper.queryUser(user.getUsername()).get(0).getUid(),"default.png","default.png","User","这个人很懒，没有个人简介哦","none",timestamp,user.getEmail());
             return Result.register_ok().data("token",token);
+        }else if (list.isEmpty()&&!captcha.equals(user.getCaptcha())){
+            return Result.register_error_captcha();
         }else {
-            return Result.register_error().data("token",token);
+            return Result.register_exist();
         }
     }
 
@@ -89,7 +91,7 @@ public class UserServiceImpl implements UserService {
     public List<UserInfo> getUserInfo(String token) {
         List<UserInfo> list=userMapper.queryUserInfo(JwtUtil.parseJWT(token).getSubject());
         list.get(0).setUserimage(photoRes+list.get(0).getUserimage());
-        list.get(0).setBackground(photoBackRes+list.get(0).getBackground());
+        list.get(0).setBackground(resUserCompressed+list.get(0).getBackground());
         return list;
     }
 

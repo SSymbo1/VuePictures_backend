@@ -27,6 +27,10 @@ public class InterceptorConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/resCompressed/**")
                 .addResourceLocations("file:///"+"D:"+"/SpringWebData"+"/Compress"+"/Res/");
         System.out.println("file:///"+"D:"+"/SpringWebData"+"/Compress"+"/Res/");
+
+        registry.addResourceHandler("/resUserCompressed/**")
+                .addResourceLocations("file:///"+"D:"+"/SpringWebData"+"/Compress"+"/UserImg/");
+        System.out.println("file:///"+"D:"+"/SpringWebData"+"/Compress"+"/UserImg/");
     }
 
     /*private String getJarFilePath() {

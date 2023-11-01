@@ -27,7 +27,6 @@ public class ArtworkServiceImpl implements ArtworkService {
     private ArtWorkMapper artWorkMapper;
     @Autowired
     private UserMapper userMapper;
-
     @Value(("${web.picture-data-res-path}"))
     private String artWorksRes;
     @Value(("${web.picture-data-res-path-compressed}"))

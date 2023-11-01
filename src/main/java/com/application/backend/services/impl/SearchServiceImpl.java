@@ -20,12 +20,16 @@ import java.util.List;
 @Slf4j
 @Service
 public class SearchServiceImpl implements SearchService{
-    @Value(("${web.picture-data-res-path}"))
+    /*@Value(("${web.picture-data-res-path}"))
     private String artWorksRes;
     @Value(("${web.user-photo-res-path}"))
-    private String photoRes;
+    private String photoRes;*/
     @Value(("${web.user-background-res-path}"))
     private String photoBackRes;
+    @Value(("${web.picture-data-res-path-compressed}"))
+    private String resCompressed;
+    @Value(("${web.user-photo-res-path-compressed}"))
+    private String resUserCompressed;
     @Autowired
     private ArtworkService artworkService=new ArtworkServiceImpl();
     @Autowired
@@ -79,13 +83,13 @@ public class SearchServiceImpl implements SearchService{
     }
     public void userinfoUrlAppender(List<UserInfo> list){
         for (UserInfo userInfo:list){
-            userInfo.setUserimage(photoRes+userInfo.getUserimage());
+            userInfo.setUserimage(resUserCompressed+userInfo.getUserimage());
             userInfo.setBackground(photoBackRes+userInfo.getBackground());
         }
     }
     public void artworksUrlAppender(List<Artworks> list){
         for (Artworks artworks:list){
-            artworks.setPicture(artWorksRes+artworks.getPicture());
+            artworks.setPicture(resCompressed+artworks.getPicture());
         }
     }
 }

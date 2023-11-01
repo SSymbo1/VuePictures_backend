@@ -23,7 +23,7 @@ public interface UserMapper {
     List<UserInfo> queryUserInfoById(int uid);
     @Select("SELECT * FROM follow WHERE uid=#{uid} AND fan=#{fan}")
     List<Integer> queryFollow(int uid,int fan);
-    @Select("SELECT fan FROM follow WHERE uid=#{uid}")
+    @Select("SELECT uid FROM follow WHERE fan=#{uid}")
     List<Integer> queryFollowUser(int uid);
     @Insert("INSERT INTO user (username, password, admin, createtime) VALUE (#{username},#{password},#{admin},#{createtime})")
     int insertIntoUser(String username,String password,int admin,long createtime);
