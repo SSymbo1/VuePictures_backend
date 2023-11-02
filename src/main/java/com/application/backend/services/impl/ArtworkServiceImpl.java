@@ -7,6 +7,7 @@ import com.application.backend.mapper.UserMapper;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.utils.FileUploadUtil;
 import com.application.backend.utils.JwtUtil;
+import com.application.backend.utils.ResUrl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
@@ -103,7 +104,7 @@ public class ArtworkServiceImpl implements ArtworkService {
         List<Artworks> list=artWorkMapper.queryArtworksByPid(pid);
         Artworks artworks=list.get(0);
         String format=artworks.getPicture().substring(artworks.getPicture().length()-3);
-        artworks.setPicture("D:"+"\\SpringWebData"+"\\Res\\"+artworks.getPicture());
+        artworks.setPicture(ResUrl.USER_SUBMIT_ARTWORK_PATH+"\\"+artworks.getPicture());
         BufferedImage image=ImageIO.read(new File(artworks.getPicture()));
         ByteArrayOutputStream os=new ByteArrayOutputStream();
         ImageIO.write(image,format,os);

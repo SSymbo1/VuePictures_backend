@@ -1,6 +1,7 @@
 package com.application.backend.utils;
 
 public interface ResUrl {
+    String ROOT_PATH="D:";
     String USER_BACKGROUND_IMAGE_PATH="D:\\SpringWebData\\UserBk";
     String USER_TITLE_IMAGE_PATH="D:\\SpringWebData\\UserImg";
     String USER_SUBMIT_ARTWORK_PATH="D:\\SpringWebData\\Res";

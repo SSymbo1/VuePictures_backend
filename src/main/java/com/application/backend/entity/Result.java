@@ -120,6 +120,34 @@ public class Result {
         result.setMessage("验证码邮件已发送！");
         return result;
     }
+    public static Result history_update(){
+        Result result=new Result();
+        result.setSuccess(true);
+        result.setCode(ResultCode.HISTORY_UPDATE);
+        result.setMessage("历史记录更新成功！");
+        return result;
+    }
+    public static Result history_delete(){
+        Result result=new Result();
+        result.setSuccess(true);
+        result.setCode(ResultCode.HISTORY_DELETE);
+        result.setMessage("历史记录删除成功！");
+        return result;
+    }
+    public static Result history_add(){
+        Result result=new Result();
+        result.setSuccess(true);
+        result.setCode(ResultCode.HISTORY_SUCCESS);
+        result.setMessage("历史记录添加成功！");
+        return result;
+    }
+    public static Result history_error(){
+        Result result=new Result();
+        result.setSuccess(true);
+        result.setCode(ResultCode.HISTORY_ERROR);
+        result.setMessage("历史记录操作异常");
+        return result;
+    }
 
     public Result success(Boolean success){
         this.setSuccess(success);

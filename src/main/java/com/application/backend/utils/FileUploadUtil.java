@@ -11,22 +11,18 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class FileUploadUtil {
-    private final String ROOT_PATH="D:";
-    private final String USER_BACKGROUND_IMAGE_PATH=this.ROOT_PATH+"\\SpringWebData\\UserBk";
-    private final String USER_TITLE_IMAGE_PATH=this.ROOT_PATH+"\\SpringWebData\\UserImg";
-    private final String USER_SUBMIT_ARTWORK_PATH=this.ROOT_PATH+"\\SpringWebData\\Res";
     /*private String getJarFilePath() {
         ApplicationHome home = new ApplicationHome(getClass());
         File jarFile = home.getSource();
         return jarFile.getParentFile().toString();
     }*/
     public String uploadUserBackground(MultipartFile file){
-        createFolderIfNotExist(USER_BACKGROUND_IMAGE_PATH);
+        createFolderIfNotExist(ResUrl.USER_BACKGROUND_IMAGE_PATH);
         String filName= getUUIDFileName(file);
         try {
             byte[] bytes=file.getBytes();
-            Files.write(Paths.get(USER_BACKGROUND_IMAGE_PATH+"\\"+filName),bytes);
-            ImgCompressUtil.imgSizeCompress(filName,USER_BACKGROUND_IMAGE_PATH);
+            Files.write(Paths.get(ResUrl.USER_BACKGROUND_IMAGE_PATH+"\\"+filName),bytes);
+            ImgCompressUtil.imgSizeCompress(filName,ResUrl.USER_BACKGROUND_IMAGE_PATH);
         }catch (IOException e){
             e.printStackTrace();
             return "wrong";
@@ -34,12 +30,12 @@ public class FileUploadUtil {
         return filName;
     }
     public String uploadUserTitleImage(MultipartFile file){
-        createFolderIfNotExist(USER_TITLE_IMAGE_PATH);
+        createFolderIfNotExist(ResUrl.USER_TITLE_IMAGE_PATH);
         String filName= getUUIDFileName(file);
         try {
             byte[] bytes=file.getBytes();
-            Files.write(Paths.get(USER_TITLE_IMAGE_PATH+"\\"+filName),bytes);
-            ImgCompressUtil.imgSizeCompress(filName,USER_TITLE_IMAGE_PATH);
+            Files.write(Paths.get(ResUrl.USER_TITLE_IMAGE_PATH+"\\"+filName),bytes);
+            ImgCompressUtil.imgSizeCompress(filName,ResUrl.USER_TITLE_IMAGE_PATH);
         }catch (IOException e){
             e.printStackTrace();
             return "wrong";
@@ -47,12 +43,12 @@ public class FileUploadUtil {
         return filName;
     }
     public String uploadArtworkImage(MultipartFile file){
-        createFolderIfNotExist(USER_SUBMIT_ARTWORK_PATH);
+        createFolderIfNotExist(ResUrl.USER_SUBMIT_ARTWORK_PATH);
         String filName= getUUIDFileName(file);
         try {
             byte[] bytes=file.getBytes();
-            Files.write(Paths.get(USER_SUBMIT_ARTWORK_PATH+"\\"+filName),bytes);
-            ImgCompressUtil.imgSizeCompress(filName,USER_SUBMIT_ARTWORK_PATH);
+            Files.write(Paths.get(ResUrl.USER_SUBMIT_ARTWORK_PATH+"\\"+filName),bytes);
+            ImgCompressUtil.imgSizeCompress(filName,ResUrl.USER_SUBMIT_ARTWORK_PATH);
         }catch (IOException e){
             e.printStackTrace();
             return "wrong";
@@ -60,7 +56,7 @@ public class FileUploadUtil {
         return filName;
     }
     private void createFolderIfNotExist(String folder){
-        File root=new File(ROOT_PATH);
+        File root=new File(ResUrl.ROOT_PATH);
         if (!root.exists()){
             root.mkdirs();
             File background=new File(folder);

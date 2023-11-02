@@ -15,4 +15,8 @@ public interface ResultCode {
     Integer UPDATE_USER_INFO_ERROR=9944;
     Integer EMAIL_ERROR= 1443;
     Integer EMAIL_SUCCESS= 1444;
+    Integer HISTORY_SUCCESS= 4444;
+    Integer HISTORY_ERROR= 4443;
+    Integer HISTORY_UPDATE=4445;
+    Integer HISTORY_DELETE=4446;
 }
