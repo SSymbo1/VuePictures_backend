@@ -16,6 +16,14 @@ public interface ArtWorkMapper extends BaseMapper<Artworks> {
     List<Artworks> queryMostLikedArtworks(int getNum);
     @Select("SELECT * FROM artworks WHERE pid=#{pid}")
     List<Artworks> queryArtworksByPid(int pid);
+    @Select("SELECT * FROM artworks WHERE uid=#{uid} ORDER BY createtime DESC LiMIT 1")
+    Artworks queryLastSubmitArtworks(int uid);
+    @Select("SELECT * FROM artworks WHERE uid=#{uid} ORDER BY lastviewtime DESC LIMIT 1")
+    Artworks queryLastViewArtworks(int uid);
+    @Select("SELECT favorite.uid,favorite.pid,favoritetime FROM favorite,artworks WHERE favorite.pid=artworks.pid AND artworks.uid=#{uid} ORDER BY favorite.favoritetime DESC LIMIT 1")
+    Favorite queryLastFavoriteArtworks(int uid);
+    @Select("SELECT SUM(view) FROM artworks WHERE uid=#{uid}")
+    Integer queryUserViewNum(int uid);
     @Update("UPDATE artworks SET view=view+1 WHERE pid=#{pid}")
     int updateArtworksView(int pid);
     @Update("UPDATE artworks SET lastviewtime=#{lastviewtime} WHERE pid=#{pid}")

@@ -1,6 +1,7 @@
 package com.application.backend.services.impl;
 
 import com.application.backend.entity.Artworks;
+import com.application.backend.entity.Creative;
 import com.application.backend.entity.Favorite;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.UserMapper;
@@ -185,5 +186,18 @@ public class ArtworkServiceImpl implements ArtworkService {
         int uid = userMapper.queryUser(JwtUtil.parseJWT(username).getSubject()).get(0).getUid();
         String picture = fileUploadUtil.uploadArtworkImage(file);
         return artWorkMapper.insertIntoArtworks(uid, picture, subtitle, System.currentTimeMillis(), introduce)!=0;
+    }
+
+    @Override
+    public Creative getUserIdeaData(String token) {
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        Artworks lastSubmit=artWorkMapper.queryLastSubmitArtworks(uid);
+        Artworks lastView=artWorkMapper.queryLastViewArtworks(uid);
+        Favorite lastFavorite=artWorkMapper.queryLastFavoriteArtworks(uid);
+        Integer views=artWorkMapper.queryUserViewNum(uid);
+        int fans=userMapper.queryFansNumber(uid);
+        lastSubmit.setPicture(resCompressed+lastSubmit.getPicture());
+        lastView.setPicture(resCompressed+lastView.getPicture());
+        return new Creative(lastSubmit,lastView,lastFavorite,fans,views);
     }
 }

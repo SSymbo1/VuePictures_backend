@@ -1,6 +1,7 @@
 package com.application.backend.controller;
 
 import com.application.backend.entity.Artworks;
+import com.application.backend.entity.Creative;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.services.impl.ArtworkServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -72,5 +73,9 @@ public class ArtworksController {
     @PostMapping("/submit") //用户投稿
     public boolean submit(@RequestBody MultipartFile file,@RequestParam("username") String username,@RequestParam("subtitle")String subtitle,@RequestParam("introduce") String introduce){
         return artworkService.submitArtwork(file,username,subtitle,introduce);
+    }
+    @GetMapping("/idea")
+    public Creative ideaCenter(String token){
+        return artworkService.getUserIdeaData(token);
     }
 }

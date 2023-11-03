@@ -1,6 +1,7 @@
 package com.application.backend.services;
 
 import com.application.backend.entity.Artworks;
+import com.application.backend.entity.Creative;
 import com.application.backend.entity.Favorite;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,6 +16,7 @@ public interface ArtworkService {
     List<Artworks> getHotArtworks(int num);
     List<Artworks> getArtworksById(int id);
     List<Favorite> getFavorite(String token);
+    Creative getUserIdeaData(String token);
     boolean artworksViewed(int pid);
     byte[] downloadArtworks(int pid) throws IOException;
     boolean updateArtworksViewTime(int pid);
