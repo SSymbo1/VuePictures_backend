@@ -10,6 +10,6 @@ import java.util.List;
 
 @Mapper
 public interface UserInfoMapper extends BaseMapper<UserInfo> {
-    @Select("SELECT pid, uid, picture, subtitle, likenum, createtime, introduce, view, lastviewtime from artworks,userinfo WHERE artworks.uid=userinfo.iid and artworks.uid=#{uid} or userinfo.nickname=#{uid} LIMIT 3")
+    @Select("SELECT pid, uid, picture, subtitle, likenum, createtime, introduce, view, lastviewtime FROM artworks,userinfo WHERE artworks.uid=userinfo.iid and artworks.uid=#{uid} AND del=0 OR userinfo.nickname=#{uid} LIMIT 3")
     List<Artworks> queryUserArtworksView(int uid,String nickname);
 }

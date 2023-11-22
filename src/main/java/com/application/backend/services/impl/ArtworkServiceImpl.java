@@ -3,12 +3,15 @@ package com.application.backend.services.impl;
 import com.application.backend.entity.Artworks;
 import com.application.backend.entity.Creative;
 import com.application.backend.entity.Favorite;
+import com.application.backend.entity.Result;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.UserMapper;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.utils.FileUploadUtil;
 import com.application.backend.utils.JwtUtil;
 import com.application.backend.utils.ResUrl;
+import com.application.backend.utils.ResultCode;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
@@ -26,18 +29,23 @@ import java.util.List;
 @Service
 public class ArtworkServiceImpl implements ArtworkService {
     @Autowired
-    private ArtWorkMapper artWorkMapper;
+    protected ArtWorkMapper artWorkMapper;
     @Autowired
-    private UserMapper userMapper;
+    protected UserMapper userMapper;
     @Value(("${web.picture-data-res-path}"))
-    private String artWorksRes;
+    protected String artWorksRes;
     @Value(("${web.picture-data-res-path-compressed}"))
-    private String resCompressed;
+    protected String resCompressed;
     /*private String getJarFilePath() {
         ApplicationHome home = new ApplicationHome(getClass());
         File jarFile = home.getSource();
         return jarFile.getParentFile().toString();
     }*/
+
+    /***
+     * 查询VuePictures里所有插画
+     * @return 所有插画的集合
+     */
     @Override
     public List<Artworks> getAllArtworks() {
         List<Artworks> list=artWorkMapper.queryAllArtworks();
@@ -47,11 +55,19 @@ public class ArtworkServiceImpl implements ArtworkService {
         return list;
     }
 
+    /***
+     * 分页查询VuePictures里所有插画
+     * @param token 用户token
+     * @param pageNum 页号
+     * @return 封装成IPage的插画对象，每页10张插画
+     */
     @Override
-    public IPage getAllArtworksPaged(String token,int pageNum) {
+    public IPage<Artworks> getAllArtworksPaged(String token,int pageNum) {
         Page<Artworks> page=new Page<>(pageNum,10);
         List<Favorite> favoriteList = getFavorite(token);
-        IPage<Artworks> iPage=artWorkMapper.selectPage(page,null);
+        QueryWrapper<Artworks> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("del",0);
+        IPage<Artworks> iPage=artWorkMapper.selectPage(page,queryWrapper);
         List<Artworks> list=iPage.getRecords();
         for (Artworks artworks:list){
             artworks.setPicture(resCompressed+artworks.getPicture());
@@ -68,6 +84,28 @@ public class ArtworkServiceImpl implements ArtworkService {
     }
 
     @Override
+    public IPage<Artworks> getSubmitArtworksPaged(String token, int pageNum) {
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        Page<Artworks> page=new Page<>(pageNum,9);
+        QueryWrapper<Artworks> queryWrapper=new QueryWrapper<>();
+        queryWrapper.eq("uid",uid);
+        IPage<Artworks> iPage=artWorkMapper.selectPage(page,queryWrapper);
+        List<Artworks> artworks=iPage.getRecords();
+        for (Artworks artwork:artworks){
+            if (artwork.getDel()!=0){
+                artworks.remove(artwork);
+            }
+            artwork.setPicture(resCompressed+artwork.getPicture());
+        }
+        return iPage;
+    }
+
+    /***
+     * 随机获取VuePictures里指定数量的插画
+     * @param num 获取插画的数量
+     * @return 获取插画组成的集合
+     */
+    @Override
     public List<Artworks> getRandArtworks(int num) {
         List<Artworks> list=artWorkMapper.queryRandArtworks(num);
         for (Artworks artworks:list){
@@ -76,6 +114,11 @@ public class ArtworkServiceImpl implements ArtworkService {
         return list;
     }
 
+    /***
+     * 获取VuePictures里指定数量的热门插画
+     * @param num 获取插画的数量
+     * @return 获取插画组成的集合
+     */
     @Override
     public List<Artworks> getHotArtworks(int num) {
         List<Artworks> list=artWorkMapper.queryMostLikedArtworks(num);
@@ -85,6 +128,11 @@ public class ArtworkServiceImpl implements ArtworkService {
         return list;
     }
 
+    /***
+     * 根据插画id查询插画
+     * @param id 插画的id
+     * @return 获取插画组成的集合
+     */
     @Override
     public List<Artworks> getArtworksById(int id) {
         List<Artworks> list=artWorkMapper.queryArtworksByPid(id);
@@ -94,12 +142,24 @@ public class ArtworkServiceImpl implements ArtworkService {
         return list;
     }
 
+    /***
+     * 更新插画的浏览量（加一）
+     * @param pid 插画的id
+     * @return 操作是否执行成功
+     */
+
     @Override
     public boolean artworksViewed(int pid) {
         int i = artWorkMapper.updateArtworksView(pid);
         return i != 0;
     }
 
+    /***
+     * 下载插画
+     * @param pid 插画的id
+     * @return 指定插画流
+     * @throws IOException 可能异常：插画不存在
+     */
     @Override
     public byte[] downloadArtworks(int pid) throws IOException {
         List<Artworks> list=artWorkMapper.queryArtworksByPid(pid);
@@ -112,10 +172,22 @@ public class ArtworkServiceImpl implements ArtworkService {
         return os.toByteArray();
     }
 
+    /***
+     * 更新插画的最后浏览时间
+     * @param pid 指定插画的id
+     * @return 操作是否执行成功
+     */
     @Override
     public boolean updateArtworksViewTime(int pid) {
         return artWorkMapper.updateArtworksLastViewTime(pid,System.currentTimeMillis())!=0;
     }
+
+    /***
+     * 收藏插画
+     * @param token 用户token
+     * @param pid 插画id
+     * @return 操作是否执行成功
+     */
 
     @Override
     public boolean artworksFavorite(String token, int pid) {
@@ -131,6 +203,12 @@ public class ArtworkServiceImpl implements ArtworkService {
         }
     }
 
+    /***
+     * 获取用户对某插画收藏状态
+     * @param token 用户token
+     * @param pid 插画id
+     * @return 是否收藏
+     */
     @Override
     public boolean artworksFavoriteStatue(String token, int pid) {
         int uid = userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
@@ -138,18 +216,30 @@ public class ArtworkServiceImpl implements ArtworkService {
         return list.isEmpty();
     }
 
+    /***
+     * 获取用户收藏插画
+     * @param token 用户token
+     * @return 用户收藏插画组成的集合
+     */
+
     @Override
     public List<Favorite> getFavorite(String token) {
         int uid = userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
         return artWorkMapper.queryFavoriteByUid(uid);
     }
 
+    /***
+     * 用户投稿作品是否自我收藏
+     * @param uid 用户id
+     * @return 用户投稿作品组成的集合（添加编辑是否收藏的属性liked）
+     */
+
     @Override
     public List<Artworks> getUserArtworks(int uid) {
         List<Artworks> list = artWorkMapper.queryArtworksByUid(uid);
         List<Favorite> list1 = artWorkMapper.queryFavoriteByUid(uid);
         for (Artworks artworks:list){
-            artworks.setPicture(artWorksRes+artworks.getPicture());
+            artworks.setPicture(resCompressed+artworks.getPicture());
             for (Favorite favorite:list1){
                 if (artworks.getPid()==favorite.getPid()){
                     artworks.setLiked(true);
@@ -167,7 +257,7 @@ public class ArtworkServiceImpl implements ArtworkService {
         List<Artworks> list = artWorkMapper.queryFavoriteArtworks(uid);
         List<Favorite> list1=artWorkMapper.queryFavoriteByUid(uid);
         for (Artworks artworks:list){
-            artworks.setPicture(artWorksRes+artworks.getPicture());
+            artworks.setPicture(resCompressed+artworks.getPicture());
             for (Favorite favorite:list1){
                 if (artworks.getPid()==favorite.getPid()){
                     artworks.setLiked(true);
@@ -184,7 +274,7 @@ public class ArtworkServiceImpl implements ArtworkService {
     public boolean submitArtwork(MultipartFile file, String username, String subtitle, String introduce) {
         FileUploadUtil fileUploadUtil=new FileUploadUtil();
         int uid = userMapper.queryUser(JwtUtil.parseJWT(username).getSubject()).get(0).getUid();
-        String picture = fileUploadUtil.uploadArtworkImage(file);
+        String picture = fileUploadUtil.uploadArtworkImage(file).getMessage();
         return artWorkMapper.insertIntoArtworks(uid, picture, subtitle, System.currentTimeMillis(), introduce)!=0;
     }
 
@@ -196,8 +286,23 @@ public class ArtworkServiceImpl implements ArtworkService {
         Favorite lastFavorite=artWorkMapper.queryLastFavoriteArtworks(uid);
         Integer views=artWorkMapper.queryUserViewNum(uid);
         int fans=userMapper.queryFansNumber(uid);
-        lastSubmit.setPicture(resCompressed+lastSubmit.getPicture());
-        lastView.setPicture(resCompressed+lastView.getPicture());
-        return new Creative(lastSubmit,lastView,lastFavorite,fans,views);
+        if (lastSubmit==null||lastView==null||lastFavorite==null){
+            return new Creative(new Artworks(),new Artworks(),new Favorite(),fans,0);
+        }else {
+            lastSubmit.setPicture(resCompressed+lastSubmit.getPicture());
+            lastView.setPicture(resCompressed+lastView.getPicture());
+            return new Creative(lastSubmit,lastView,lastFavorite,fans,views);
+        }
+    }
+
+    @Override
+    public Result delSubmit(String token, int id) {
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        int res=artWorkMapper.deleteSubmit(uid,id);
+        if (res!=0){
+            return Result.delete(ResultCode.SUCCESS,"删除成功！");
+        }else {
+            return Result.delete(ResultCode.ERROR,"删除失败！");
+        }
     }
 }

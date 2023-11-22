@@ -1,12 +1,16 @@
 package com.application.backend.services.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.application.backend.entity.Artworks;
 import com.application.backend.entity.Favorite;
 import com.application.backend.entity.UserInfo;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.UserInfoMapper;
+import com.application.backend.mapper.UserMapper;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.services.SearchService;
+import com.application.backend.services.UserService;
+import com.application.backend.utils.JwtUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -33,14 +38,16 @@ public class SearchServiceImpl implements SearchService{
     @Autowired
     private ArtworkService artworkService=new ArtworkServiceImpl();
     @Autowired
+    private UserMapper userMapper;
+    @Autowired
     private ArtWorkMapper artWorkMapper;
     @Autowired
     private UserInfoMapper userInfoMapper;
     @Override
-    public IPage searchArtworks(String token,String search, int pageNum) {
-        Page<Artworks> page=new Page<>(pageNum,10);
+    public IPage<Artworks> searchArtworks(String token,String search, int pageNum) {
+        Page<Artworks> page=new Page<>(pageNum,9);
         QueryWrapper<Artworks> queryWrapper=new QueryWrapper<>();
-        queryWrapper.like("pid",search).or().like("subtitle",search);
+        queryWrapper.eq("del",0).and(condition->condition.like("pid",search).or().like("subtitle",search));
         IPage<Artworks> iPage=artWorkMapper.selectPage(page,queryWrapper);
         List<Artworks> list=iPage.getRecords();
         List<Favorite> favorites=artworkService.getFavorite(token);
@@ -67,8 +74,8 @@ public class SearchServiceImpl implements SearchService{
     }
 
     @Override
-    public IPage searchUser(String search, int pageNUm) {
-        Page<UserInfo> page=new Page<>(pageNUm,10);
+    public IPage<UserInfo> searchUser(String search, int pageNUm) {
+        Page<UserInfo> page=new Page<>(pageNUm,9);
         QueryWrapper<UserInfo> queryWrapper=new QueryWrapper<>();
         queryWrapper.like("iid",search).or().like("nickname",search);
         IPage<UserInfo> iPage= userInfoMapper.selectPage(page,queryWrapper);
@@ -81,6 +88,27 @@ public class SearchServiceImpl implements SearchService{
         userinfoUrlAppender(userInfos);
         return iPage;
     }
+
+    @Override
+    public IPage<Artworks> artworksManagerSearcher(String token, String keyword, int pageNum) {
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        Page<Artworks> page=new Page<>(pageNum,9);
+        QueryWrapper<Artworks> queryWrapper=new QueryWrapper<>();
+        if (keyword==null||"".equals(keyword)){
+            queryWrapper.eq("uid",uid).and(condition->condition.eq("del",0));
+        }else {
+            queryWrapper.eq("uid",uid).and(condition->condition.like("subtitle",keyword)).and(condition->condition.eq("del",0));
+        }
+        IPage<Artworks> iPage=artWorkMapper.selectPage(page,queryWrapper);
+        List<Artworks> artworks=iPage.getRecords();
+        for (Artworks artwork:artworks){
+            artwork.setPicture(resCompressed+artwork.getPicture());
+            Date date=DateUtil.date(artwork.getCreatetime());
+            artwork.setCreatetimeString(date.toString());
+        }
+        return iPage;
+    }
+
     public void userinfoUrlAppender(List<UserInfo> list){
         for (UserInfo userInfo:list){
             userInfo.setUserimage(resUserCompressed+userInfo.getUserimage());

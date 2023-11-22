@@ -3,6 +3,7 @@ package com.application.backend.services;
 import com.application.backend.entity.Artworks;
 import com.application.backend.entity.Creative;
 import com.application.backend.entity.Favorite;
+import com.application.backend.entity.Result;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,11 +12,12 @@ import java.util.List;
 
 public interface ArtworkService {
     List<Artworks> getAllArtworks();
-    IPage getAllArtworksPaged(String token,int pageNum);
+    IPage<Artworks> getAllArtworksPaged(String token,int pageNum);
     List<Artworks> getRandArtworks(int num);
     List<Artworks> getHotArtworks(int num);
     List<Artworks> getArtworksById(int id);
     List<Favorite> getFavorite(String token);
+    IPage<Artworks> getSubmitArtworksPaged(String token,int pageNum);
     Creative getUserIdeaData(String token);
     boolean artworksViewed(int pid);
     byte[] downloadArtworks(int pid) throws IOException;
@@ -25,4 +27,5 @@ public interface ArtworkService {
     List<Artworks> getUserArtworks(int uid);
     List<Artworks> getFavoriteArtworks(int uid);
     boolean submitArtwork(MultipartFile file,String username,String subtitle,String introduce);
+    Result delSubmit(String token,int id);
 }

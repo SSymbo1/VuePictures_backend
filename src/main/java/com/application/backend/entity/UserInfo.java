@@ -3,10 +3,12 @@ package com.application.backend.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @TableName("userinfo")
 public class UserInfo {
     private int iid;
@@ -28,91 +30,6 @@ public class UserInfo {
         this.self=self;
         this.sex = sex;
         this.birthday = birthday;
-        this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "UserInfo{" +
-                "iid=" + iid +
-                ", background='" + background + '\'' +
-                ", userimage='" + userimage + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", sex='" + sex + '\'' +
-                ", birthday=" + birthday +
-                ", email='" + email + '\'' +
-                '}';
-    }
-
-    public List<Artworks> getArtworks() {
-        return artworks;
-    }
-
-    public void setArtworks(List<Artworks> artworks) {
-        this.artworks = artworks;
-    }
-
-    public int getIid() {
-        return iid;
-    }
-
-    public void setIid(int iid) {
-        this.iid = iid;
-    }
-
-    public String getBackground() {
-        return background;
-    }
-
-    public void setBackground(String background) {
-        this.background = background;
-    }
-
-    public String getUserimage() {
-        return userimage;
-    }
-
-    public void setUserimage(String userimage) {
-        this.userimage = userimage;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getSelf() {
-        return self;
-    }
-
-    public void setSelf(String self) {
-        this.self = self;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public long getBirthday() {
-        return birthday;
-    }
-
-    public void setBirthday(long birthday) {
-        this.birthday = birthday;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
     }
 }

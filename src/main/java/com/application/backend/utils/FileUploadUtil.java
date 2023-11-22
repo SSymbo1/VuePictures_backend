@@ -1,5 +1,6 @@
 package com.application.backend.utils;
 
+import com.application.backend.entity.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +17,7 @@ public class FileUploadUtil {
         File jarFile = home.getSource();
         return jarFile.getParentFile().toString();
     }*/
-    public String uploadUserBackground(MultipartFile file){
+    public Result uploadUserBackground(MultipartFile file){
         createFolderIfNotExist(ResUrl.USER_BACKGROUND_IMAGE_PATH);
         String filName= getUUIDFileName(file);
         try {
@@ -25,11 +26,11 @@ public class FileUploadUtil {
             ImgCompressUtil.imgSizeCompress(filName,ResUrl.USER_BACKGROUND_IMAGE_PATH);
         }catch (IOException e){
             e.printStackTrace();
-            return "wrong";
+            return Result.file_upload_background_error();
         }
-        return filName;
+        return Result.file_upload_success(filName);
     }
-    public String uploadUserTitleImage(MultipartFile file){
+    public Result uploadUserTitleImage(MultipartFile file){
         createFolderIfNotExist(ResUrl.USER_TITLE_IMAGE_PATH);
         String filName= getUUIDFileName(file);
         try {
@@ -38,11 +39,11 @@ public class FileUploadUtil {
             ImgCompressUtil.imgSizeCompress(filName,ResUrl.USER_TITLE_IMAGE_PATH);
         }catch (IOException e){
             e.printStackTrace();
-            return "wrong";
+            return Result.file_upload_user_error();
         }
-        return filName;
+        return Result.file_upload_success(filName);
     }
-    public String uploadArtworkImage(MultipartFile file){
+    public Result uploadArtworkImage(MultipartFile file){
         createFolderIfNotExist(ResUrl.USER_SUBMIT_ARTWORK_PATH);
         String filName= getUUIDFileName(file);
         try {
@@ -51,9 +52,9 @@ public class FileUploadUtil {
             ImgCompressUtil.imgSizeCompress(filName,ResUrl.USER_SUBMIT_ARTWORK_PATH);
         }catch (IOException e){
             e.printStackTrace();
-            return "wrong";
+            return Result.file_upload_artworks_error();
         }
-        return filName;
+        return Result.file_upload_success(filName);
     }
     private void createFolderIfNotExist(String folder){
         File root=new File(ResUrl.ROOT_PATH);

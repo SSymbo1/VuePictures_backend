@@ -1,8 +1,11 @@
 package com.application.backend.entity;
 
 import com.application.backend.utils.ResultCode;
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
+@Data
 public class Result {
     private Boolean success;
     private Integer code;
@@ -10,7 +13,15 @@ public class Result {
     private Map<String, Object> data=new HashMap<>();
 
     private Result(){}
-    public static Result ok(){
+    public Result data(String key,Object value){
+        this.data.put(key,value);
+        return this;
+    }
+    public Result data(Map<String,Object> map){
+        this.setData(map);
+        return this;
+    }
+    public static Result login_success(){
         Result result=new Result();
         result.setSuccess(true);
         result.setCode(ResultCode.SUCCESS);
@@ -18,7 +29,7 @@ public class Result {
         return result;
     }
 
-    public static Result error(){
+    public static Result login_error(){
         Result result=new Result();
         result.setSuccess(false);
         result.setCode(ResultCode.ERROR);
@@ -26,7 +37,7 @@ public class Result {
         return result;
     }
 
-    public static Result register_ok(){
+    public static Result register_success(){
         Result result=new Result();
         result.setSuccess(true);
         result.setCode(ResultCode.REGISTER_SUCCESS);
@@ -148,61 +159,31 @@ public class Result {
         result.setMessage("历史记录操作异常");
         return result;
     }
-
-    public Result success(Boolean success){
-        this.setSuccess(success);
-        return this;
+    public static Result file_upload_background_error(){
+        Result result=new Result();
+        result.setSuccess(false);
+        return result;
     }
-
-    public Result message(String message){
-        this.setMessage(message);
-        return this;
+    public static Result file_upload_user_error(){
+        Result result=new Result();
+        result.setSuccess(false);
+        return result;
     }
-
-    public Result code(Integer code){
-        this.setCode(code);
-        return this;
+    public static Result file_upload_artworks_error(){
+        Result result=new Result();
+        result.setSuccess(false);
+        return result;
     }
-
-    public Result data(String key,Object value){
-        this.data.put(key,value);
-        return this;
+    public static Result file_upload_success(String fileName){
+        Result result=new Result();
+        result.setSuccess(true);
+        result.setMessage(fileName);
+        return result;
     }
-
-    public Result data(Map<String,Object> map){
-        this.setData(map);
-        return this;
-    }
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Map<String, Object> getData() {
-        return data;
-    }
-
-    public void setData(Map<String, Object> data) {
-        this.data = data;
+    public static Result delete(Integer code,String message){
+        Result result=new Result();
+        result.setCode(code);
+        result.setMessage(message);
+        return result;
     }
 }

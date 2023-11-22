@@ -5,10 +5,11 @@ spring:
   servlet:
     multipart:
       max-file-size: 30MB
+      max-request-size: 30MB
   devtools:
     restart:
       enabled: true
-      additional-paths: src/main/java
+      additional-paths: src/main/
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver

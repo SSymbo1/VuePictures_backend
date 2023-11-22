@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface UserMapper {
+public interface UserMapper{
     @Select("SELECT * FROM user WHERE username=#{username}")
     List<User> queryUser(String username);
     @Select("SELECT * FROM user WHERE username=#{username} AND password=#{password}")
@@ -25,8 +25,8 @@ public interface UserMapper {
     List<Integer> queryFollow(int uid,int fan);
     @Select("SELECT uid FROM follow WHERE fan=#{uid}")
     List<Integer> queryFollowUser(int uid);
-    @Insert("INSERT INTO user (username, password, admin, createtime) VALUE (#{username},#{password},#{admin},#{createtime})")
-    int insertIntoUser(String username,String password,int admin,long createtime);
+    @Insert("INSERT INTO user (username, password, admin, createtime,ban,del) VALUE (#{username},#{password},#{admin},#{createtime},#{ban},#{del})")
+    int insertIntoUser(String username,String password,int admin,long createtime,int ban,int del);
     @Delete("DELETE FROM follow WHERE uid=#{uid} AND fan=#{fan}")
     int deleteFromFollow(int uid,int fan);
     @Insert("INSERT INTO userinfo VALUE (#{iid},#{background},#{userimage},#{nickname},#{self},#{sex},#{birthday},#{email})")

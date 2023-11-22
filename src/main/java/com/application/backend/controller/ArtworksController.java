@@ -2,6 +2,7 @@ package com.application.backend.controller;
 
 import com.application.backend.entity.Artworks;
 import com.application.backend.entity.Creative;
+import com.application.backend.entity.Result;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.services.impl.ArtworkServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -34,7 +35,7 @@ public class ArtworksController {
         return artworkService.getHotArtworks(3);
     }
     @GetMapping("/getArtworksP") //返回所有插画接口（查询结果分页，每页10张）
-    public IPage getArtworksPaged(String token,int page){
+    public IPage<Artworks> getArtworksPaged(String token,int page){
         return artworkService.getAllArtworksPaged(token,page);
     }
     @GetMapping("/getArtworksId") //获取插画接口，提供插画id(pid)，返回Artworks封装的图片详细信息集合
@@ -77,5 +78,13 @@ public class ArtworksController {
     @GetMapping("/idea")
     public Creative ideaCenter(String token){
         return artworkService.getUserIdeaData(token);
+    }
+    @GetMapping("/submitPaged")
+    public IPage<Artworks> getSubmitPaged(String token,int pageNum){
+        return artworkService.getSubmitArtworksPaged(token,pageNum);
+    }
+    @GetMapping("/delSubmit")
+    public Result delSubmit(String token,int pid){
+        return artworkService.delSubmit(token, pid);
     }
 }

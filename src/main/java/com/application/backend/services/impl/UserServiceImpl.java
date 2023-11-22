@@ -61,9 +61,9 @@ public class UserServiceImpl implements UserService {
         int code=0;
         list=userMapper.queryUser(user.getUsername());
         if (list.isEmpty()&&captcha.equals(user.getCaptcha())){
-            code = userMapper.insertIntoUser(user.getUsername(), user.getPassword(), 0, timestamp);
+            code = userMapper.insertIntoUser(user.getUsername(), user.getPassword(), 0, timestamp,0,0);
             int key=userMapper.insertIntoUserInfo(userMapper.queryUser(user.getUsername()).get(0).getUid(),"default.png","default.png","User","这个人很懒，没有个人简介哦","none",timestamp,user.getEmail());
-            return Result.register_ok().data("token",token);
+            return Result.register_success().data("token",token);
         }else if (list.isEmpty()&&!captcha.equals(user.getCaptcha())){
             return Result.register_error_captcha();
         }else {
@@ -76,9 +76,9 @@ public class UserServiceImpl implements UserService {
         String token=JwtUtil.createJWT(user.getUsername());
         List<User> list=userMapper.queryUserByUsrAndPwd(user.getUsername(),user.getPassword());
         if (!list.isEmpty()){
-            return Result.ok().data("token",token);
+            return Result.login_success().data("token",token);
         }else {
-            return Result.error().data("token",token);
+            return Result.login_error().data("token",token);
         }
     }
 
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result userBackgroundChange(MultipartFile file, HttpServletRequest request) {
         FileUploadUtil fileUploadUtil=new FileUploadUtil();
-        String fileName= fileUploadUtil.uploadUserBackground(file);
+        String fileName= fileUploadUtil.uploadUserBackground(file).getMessage();
         String username=JwtUtil.parseJWT(request.getHeader("Auth")).getSubject();
         int iid=userMapper.queryUser(username).get(0).getUid();
         int i = userMapper.updateUserBackgroundImage(fileName, iid);
@@ -108,7 +108,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result userTitleHeadChange(MultipartFile file, HttpServletRequest request) {
         FileUploadUtil fileUploadUtil=new FileUploadUtil();
-        String fileName= fileUploadUtil.uploadUserTitleImage(file);
+        String fileName= fileUploadUtil.uploadUserTitleImage(file).getMessage();
         String username=JwtUtil.parseJWT(request.getHeader("Auth")).getSubject();
         int iid=userMapper.queryUser(username).get(0).getUid();
         int i = userMapper.updateUserTitleHeadImage(fileName, iid);
