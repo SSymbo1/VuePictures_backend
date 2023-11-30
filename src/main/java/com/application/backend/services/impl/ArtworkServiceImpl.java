@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
@@ -253,12 +254,18 @@ public class ArtworkServiceImpl implements ArtworkService {
     }
 
     @Override
-    public List<Artworks> getFavoriteArtworks(int uid) {
+    public List<Artworks> getFavoriteArtworks(int uid,String token) {
+        int id=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
         List<Artworks> list = artWorkMapper.queryFavoriteArtworks(uid);
-        List<Favorite> list1=artWorkMapper.queryFavoriteByUid(uid);
+        List<Favorite> favorites;
+        if (uid==id){
+            favorites=artWorkMapper.queryFavoriteByUid(uid);
+        }else {
+            favorites=artWorkMapper.queryFavoriteByUid(id);
+        }
         for (Artworks artworks:list){
             artworks.setPicture(resCompressed+artworks.getPicture());
-            for (Favorite favorite:list1){
+            for (Favorite favorite:favorites){
                 if (artworks.getPid()==favorite.getPid()){
                     artworks.setLiked(true);
                     break;
@@ -303,6 +310,44 @@ public class ArtworkServiceImpl implements ArtworkService {
             return Result.delete(ResultCode.SUCCESS,"删除成功！");
         }else {
             return Result.delete(ResultCode.ERROR,"删除失败！");
+        }
+    }
+
+    @Override
+    public Result delSubmit(String token, String captcha, String inputCaptcha) {
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        if (!captcha.equals(inputCaptcha)){
+            return Result.delete(ResultCode.ERROR,"验证码错误！");
+        }else {
+            int res=artWorkMapper.deleteAllSubmit(uid);
+            if (res!=0){
+                return Result.delete(ResultCode.SUCCESS,"删除成功！");
+            }else {
+                return Result.delete(ResultCode.ERROR,"删除失败！");
+            }
+        }
+    }
+
+    @Override
+    public Result submitInfoChange(int pid, String subtitle, String introduce) {
+        int res=artWorkMapper.updateSubmitInfo(pid,subtitle,introduce);
+        if (res!=0){
+            return Result.common(true,ResultCode.SUCCESS,"修改成功！");
+        }else {
+            return Result.common(false,ResultCode.ERROR,"修改失败！");
+        }
+    }
+
+    @Override
+    public Result submitImageChange(MultipartFile file, HttpServletRequest request) {
+        FileUploadUtil fileUploadUtil=new FileUploadUtil();
+        String fileName=fileUploadUtil.uploadArtworkImage(file).getMessage();
+        int pid= Integer.parseInt(request.getHeader("pid"));
+        int res=artWorkMapper.updateSubmitPicture(pid,fileName);
+        if (res!=0){
+            return Result.common(true,ResultCode.SUCCESS,"修改插画图源成功！");
+        }else {
+            return Result.common(false,ResultCode.ERROR,"修改插画图源失败！");
         }
     }
 }

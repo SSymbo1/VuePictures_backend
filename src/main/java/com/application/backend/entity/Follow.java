@@ -1,5 +1,6 @@
 package com.application.backend.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Artwork {
-    private int pid;
-    private String subtitle;
-    private String introduce;
+@TableName("follow")
+public class Follow {
+    private int uid;
+    private int fan;
+    private long followTime;
 }

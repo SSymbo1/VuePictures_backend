@@ -30,4 +30,8 @@ public class SearchController {
     public IPage<Artworks> getSearchedSubmit(String token,String keyword,int page){
         return searchService.artworksManagerSearcher(token,keyword,page);
     }
+    @GetMapping("/search_fans")
+    public IPage<UserInfo> getSearchedFans(String token,String keyword,int page){
+        return searchService.fansManagerSearcher(token, keyword, page);
+    }
 }

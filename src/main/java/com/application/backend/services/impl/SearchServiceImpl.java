@@ -3,13 +3,13 @@ package com.application.backend.services.impl;
 import cn.hutool.core.date.DateUtil;
 import com.application.backend.entity.Artworks;
 import com.application.backend.entity.Favorite;
+import com.application.backend.entity.Follow;
 import com.application.backend.entity.UserInfo;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.UserInfoMapper;
 import com.application.backend.mapper.UserMapper;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.services.SearchService;
-import com.application.backend.services.UserService;
 import com.application.backend.utils.JwtUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +36,8 @@ public class SearchServiceImpl implements SearchService{
     private String resCompressed;
     @Value(("${web.user-photo-res-path-compressed}"))
     private String resUserCompressed;
+    @Value(("${web.user-photo-res-path}"))
+    private String photoRes;
     @Autowired
     private ArtworkService artworkService=new ArtworkServiceImpl();
     @Autowired
@@ -105,6 +108,41 @@ public class SearchServiceImpl implements SearchService{
             artwork.setPicture(resCompressed+artwork.getPicture());
             Date date=DateUtil.date(artwork.getCreatetime());
             artwork.setCreatetimeString(date.toString());
+        }
+        return iPage;
+    }
+
+    @Override
+    public IPage<UserInfo> fansManagerSearcher(String token, String keyword, int pageNum) {
+        int pageSize=9;
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        IPage<UserInfo> iPage = new Page<>();
+        iPage.setCurrent(pageNum);
+        iPage.setSize(pageSize);
+        List<UserInfo> userInfos=userInfoMapper.queryFansUserInfo(uid);
+        if (!userInfos.isEmpty()){
+            List<Follow> follows=userMapper.queryUserFollow(uid);
+            System.out.println(follows);
+            if (!"".equals(keyword) && keyword != null) {
+                userInfos = userInfoMapper.queryFansUserInfoByKeyword(uid, keyword);
+            }
+            iPage.setTotal(userInfos.size());
+            iPage.setPages((int)Math.ceil((double)iPage.getTotal()/iPage.getSize()));
+            iPage.setRecords(userInfos.subList((pageNum-1)*pageSize,Math.min(pageNum*pageSize,userInfos.size())));
+            for (UserInfo userInfo:userInfos){
+                userInfo.setUserimage(photoRes+userInfo.getUserimage());
+                userInfo.setBackground(photoBackRes+userInfo.getBackground());
+                for (Follow follow:follows){
+                    if (follow.getFan()==userInfo.getIid()){
+                        Date date=DateUtil.date(follow.getFollowTime());
+                        userInfo.setFollowTime(date.toString());
+                    }
+                }
+            }
+        }else {
+            iPage.setTotal(0);
+            iPage.setPages(0);
+            iPage.setRecords(new ArrayList<>());
         }
         return iPage;
     }

@@ -1,8 +1,7 @@
 package com.application.backend.services.impl;
 
-import com.application.backend.entity.Result;
-import com.application.backend.entity.User;
-import com.application.backend.entity.UserInfo;
+import com.application.backend.entity.*;
+import com.application.backend.mapper.UserInfoMapper;
 import com.application.backend.mapper.UserMapper;
 import com.application.backend.services.UserService;
 import com.application.backend.utils.FileUploadUtil;
@@ -22,6 +21,8 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private UserInfoMapper userInfoMapper;
     @Value(("${web.user-photo-res-path}"))
     private String photoRes;
     @Value(("${web.user-background-res-path}"))
@@ -130,7 +131,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean followUser(int uid, int fan) {
         if (userMapper.queryFollow(uid,fan).isEmpty()){
-            return userMapper.insertIntoFollow(uid, fan)!=0;
+            return userMapper.insertIntoFollow(uid, fan,System.currentTimeMillis())!=0;
         }else {
             return userMapper.deleteFromFollow(uid, fan)!=0;
         }

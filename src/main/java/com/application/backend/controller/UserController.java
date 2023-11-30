@@ -3,7 +3,9 @@ package com.application.backend.controller;
 import com.application.backend.entity.Result;
 import com.application.backend.entity.User;
 import com.application.backend.entity.UserInfo;
+import com.application.backend.services.BlockService;
 import com.application.backend.services.UserService;
+import com.application.backend.services.impl.BlockServiceImpl;
 import com.application.backend.services.impl.UserServiceImpl;
 import com.application.backend.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private final UserService userService=new UserServiceImpl();
+    @Autowired
+    private final BlockService blockService=new BlockServiceImpl();
     @PostMapping ("/login") //登录接口，提供User对象，返回Result封装的结果集
     public Result login(@RequestBody User user){
         return userService.userLogin(user);
@@ -66,5 +70,21 @@ public class UserController {
     @GetMapping("/all_user_follower") //获取用户关注者集合，提供token，返回关注者
     public List<Integer> getAllUserFollower(String token){
         return userService.getFollowedUser(token);
+    }
+    @GetMapping("/getBlockedUser")
+    public Result getBlockedUser(String token,int uid){
+        return blockService.isUserBlocked(token, uid);
+    }
+    @GetMapping("/blockStatue")
+    public Result getBlockedStatue(String token,int uid){
+        return blockService.authUserBlocked(token, uid);
+    }
+    @GetMapping("/block")
+    public Result blockUser(String token,int uid){
+        return blockService.blockUser(token, uid);
+    }
+    @GetMapping("/userBlocker")
+    List<Integer> getAllUserBlocker(String token){
+        return blockService.getUserBlocker(token);
     }
 }

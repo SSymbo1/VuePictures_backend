@@ -8,4 +8,5 @@ public interface SearchService {
     IPage<Artworks> searchArtworks(String token, String search, int pageNum);
     IPage<UserInfo> searchUser(String search, int pageNum);
     IPage<Artworks> artworksManagerSearcher(String token,String keyword,int pageNum);
+    IPage<UserInfo> fansManagerSearcher(String token,String keyword,int pageNum);
 }

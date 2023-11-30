@@ -5,10 +5,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class Artwork {
-    private int pid;
-    private String subtitle;
-    private String introduce;
+@AllArgsConstructor
+public class CodeVerify {
+    private String token;
+    private String captcha;
+    private String inputCaptcha;
 }

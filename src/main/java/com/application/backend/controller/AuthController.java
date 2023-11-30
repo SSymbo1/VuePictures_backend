@@ -19,4 +19,8 @@ public class AuthController {
     public Result captchaSender(String email){
         return authService.emailCaptcha(email);
     }
+    @GetMapping("/delete_email")
+    public Result deleteAllSubmitCaptchaSender(String email,String token){
+        return authService.deleteSubmitCaptcha(email, token);
+    };
 }

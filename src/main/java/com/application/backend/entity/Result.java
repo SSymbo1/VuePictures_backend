@@ -21,6 +21,13 @@ public class Result {
         this.setData(map);
         return this;
     }
+    public static Result common(boolean success,Integer code,String message){
+        Result result=new Result();
+        result.setSuccess(success);
+        result.setMessage(message);
+        result.setCode(code);
+        return result;
+    }
     public static Result login_success(){
         Result result=new Result();
         result.setSuccess(true);

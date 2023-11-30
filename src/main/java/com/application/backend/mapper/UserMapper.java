@@ -1,5 +1,6 @@
 package com.application.backend.mapper;
 
+import com.application.backend.entity.Follow;
 import com.application.backend.entity.User;
 import com.application.backend.entity.UserInfo;
 import org.apache.ibatis.annotations.*;
@@ -25,14 +26,16 @@ public interface UserMapper{
     List<Integer> queryFollow(int uid,int fan);
     @Select("SELECT uid FROM follow WHERE fan=#{uid}")
     List<Integer> queryFollowUser(int uid);
+    @Select("SELECT * FROM follow WHERE uid=#{uid}")
+    List<Follow> queryUserFollow(int uid);
     @Insert("INSERT INTO user (username, password, admin, createtime,ban,del) VALUE (#{username},#{password},#{admin},#{createtime},#{ban},#{del})")
     int insertIntoUser(String username,String password,int admin,long createtime,int ban,int del);
     @Delete("DELETE FROM follow WHERE uid=#{uid} AND fan=#{fan}")
     int deleteFromFollow(int uid,int fan);
     @Insert("INSERT INTO userinfo VALUE (#{iid},#{background},#{userimage},#{nickname},#{self},#{sex},#{birthday},#{email})")
     int insertIntoUserInfo(int iid,String background,String userimage,String nickname,String self,String sex,long birthday,String email);
-    @Insert("INSERT INTO follow VALUE(#{uid},#{fan})")
-    int insertIntoFollow(int uid,int fan);
+    @Insert("INSERT INTO follow VALUE(#{uid},#{fan},#{follow_time})")
+    int insertIntoFollow(int uid,int fan,long follow_time);
     @Update("UPDATE userinfo SET background=#{background} WHERE iid=#{iid}")
     int updateUserBackgroundImage(String background,int iid);
     @Update("UPDATE userinfo SET userimage=#{userimage} WHERE iid=#{iid}")

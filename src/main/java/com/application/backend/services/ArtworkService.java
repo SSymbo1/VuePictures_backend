@@ -7,6 +7,7 @@ import com.application.backend.entity.Result;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,7 +26,10 @@ public interface ArtworkService {
     boolean artworksFavorite(String token,int pid);
     boolean artworksFavoriteStatue(String token,int pid);
     List<Artworks> getUserArtworks(int uid);
-    List<Artworks> getFavoriteArtworks(int uid);
+    List<Artworks> getFavoriteArtworks(int uid,String token);
     boolean submitArtwork(MultipartFile file,String username,String subtitle,String introduce);
     Result delSubmit(String token,int id);
+    Result delSubmit(String token,String captcha,String inputCaptcha);
+    Result submitInfoChange(int pid,String subtitle,String introduce);
+    Result submitImageChange(MultipartFile file, HttpServletRequest request);
 }

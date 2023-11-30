@@ -48,6 +48,12 @@ public interface ArtWorkMapper extends BaseMapper<Artworks> {
     int updateArtworksLikeNumReduce(int pid);
     @Insert("INSERT INTO artworks (uid,picture,subtitle,createtime,introduce) VALUE (#{uid},#{picture},#{subtitle},#{createtime},#{introduce})")
     int insertIntoArtworks(int uid,String picture,String subtitle,long createtime,String introduce);
-    @Insert("UPDATE artworks SET del=1 WHERE uid=#{uid} AND pid=#{pid}")
+    @Update("UPDATE artworks SET del=1 WHERE uid=#{uid} AND pid=#{pid}")
     int deleteSubmit(int uid,int pid);
+    @Update("UPDATE artworks SET del=1 WHERE uid=#{uid}")
+    int deleteAllSubmit(int uid);
+    @Update("UPDATE artworks SET subtitle=#{subtitle},introduce=#{introduce} WHERE pid=#{pid}")
+    int updateSubmitInfo(int pid,String subtitle,String introduce);
+    @Update("UPDATE artworks SET picture=#{picture} WHERE pid=#{pid}")
+    int updateSubmitPicture(int pid,String picture);
 }

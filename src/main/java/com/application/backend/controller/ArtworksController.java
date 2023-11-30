@@ -1,8 +1,6 @@
 package com.application.backend.controller;
 
-import com.application.backend.entity.Artworks;
-import com.application.backend.entity.Creative;
-import com.application.backend.entity.Result;
+import com.application.backend.entity.*;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.services.impl.ArtworkServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -12,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -68,8 +67,8 @@ public class ArtworksController {
         return artworkService.getUserArtworks(uid);
     }
     @GetMapping("/getFavorite") //根据用户id返回用户收藏的插画
-    public List<Artworks> getFavorite(int uid){
-        return artworkService.getFavoriteArtworks(uid);
+    public List<Artworks> getFavorite(int uid,String token){
+        return artworkService.getFavoriteArtworks(uid,token);
     }
     @PostMapping("/submit") //用户投稿
     public boolean submit(@RequestBody MultipartFile file,@RequestParam("username") String username,@RequestParam("subtitle")String subtitle,@RequestParam("introduce") String introduce){
@@ -86,5 +85,17 @@ public class ArtworksController {
     @GetMapping("/delSubmit")
     public Result delSubmit(String token,int pid){
         return artworkService.delSubmit(token, pid);
+    }
+    @PostMapping("/delAllSubmit")
+    public Result delAllSubmit(@RequestBody CodeVerify verify){
+        return artworkService.delSubmit(verify.getToken(), verify.getCaptcha(), verify.getInputCaptcha());
+    }
+    @PostMapping("/submitInfoChange")
+    public Result changeSubmitInfo(@RequestBody Artwork artwork){
+        return artworkService.submitInfoChange(artwork.getPid(),artwork.getSubtitle(),artwork.getIntroduce());
+    }
+    @PostMapping("/submitImageChange")
+    public Result changeSubmitImage(@RequestParam("file") MultipartFile file,HttpServletRequest request){
+        return artworkService.submitImageChange(file,request);
     }
 }

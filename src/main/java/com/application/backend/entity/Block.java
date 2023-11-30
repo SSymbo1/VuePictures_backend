@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Artwork {
-    private int pid;
-    private String subtitle;
-    private String introduce;
+public class Block {
+    private int uid;
+    private int ban;
+    private long banTime;
 }
