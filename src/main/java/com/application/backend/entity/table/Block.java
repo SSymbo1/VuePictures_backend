@@ -1,14 +1,14 @@
-package com.application.backend.entity;
+package com.application.backend.entity.table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Favorite {
+@NoArgsConstructor
+public class Block {
     private int uid;
-    private int pid;
-    private long favoritetime;
+    private int ban;
+    private long banTime;
 }

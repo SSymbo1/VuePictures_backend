@@ -1,6 +1,6 @@
 package com.application.backend.services;
 
-import com.application.backend.entity.History;
+import com.application.backend.entity.table.History;
 import com.application.backend.entity.Result;
 
 import java.util.List;

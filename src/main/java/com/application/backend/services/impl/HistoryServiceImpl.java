@@ -1,7 +1,7 @@
 package com.application.backend.services.impl;
 
-import com.application.backend.entity.Favorite;
-import com.application.backend.entity.History;
+import com.application.backend.entity.table.Favorite;
+import com.application.backend.entity.table.History;
 import com.application.backend.entity.Result;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.HistoryMapper;

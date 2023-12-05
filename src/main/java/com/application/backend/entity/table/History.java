@@ -1,5 +1,6 @@
-package com.application.backend.entity;
+package com.application.backend.entity.table;
 
+import com.application.backend.entity.table.Artworks;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;

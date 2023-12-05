@@ -1,8 +1,8 @@
 package com.application.backend.mapper;
 
-import com.application.backend.entity.Follow;
-import com.application.backend.entity.User;
-import com.application.backend.entity.UserInfo;
+import com.application.backend.entity.table.Follow;
+import com.application.backend.entity.table.User;
+import com.application.backend.entity.table.UserInfo;
 import org.apache.ibatis.annotations.*;
 import java.util.List;
 

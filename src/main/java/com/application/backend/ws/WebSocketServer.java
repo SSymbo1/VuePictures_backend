@@ -2,11 +2,15 @@ package com.application.backend.ws;
 
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.application.backend.entity.Message;
-import com.application.backend.entity.User;
-import com.application.backend.entity.UserInfo;
+import com.application.backend.entity.Result;
+import com.application.backend.entity.table.User;
+import com.application.backend.entity.table.UserInfo;
 import com.application.backend.mapper.UserInfoMapper;
 import com.application.backend.mapper.UserMapper;
+import com.application.backend.services.MessageService;
+import com.application.backend.services.impl.MessageServiceImpl;
 import com.application.backend.utils.ApplicationContextProvider;
 import com.application.backend.utils.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +31,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class WebSocketServer {
     private final UserMapper userMapper = ApplicationContextProvider.getBean(UserMapper.class);
     private final UserInfoMapper userInfoMapper=ApplicationContextProvider.getBean(UserInfoMapper.class);
+    private final MessageService messageService= ApplicationContextProvider.getBean(MessageServiceImpl.class);
     private static final Map<Integer,Session> sessionMap = new ConcurrentHashMap<>();
     private final static String photoRes="http://localhost:9090/resUser/";
     private final static String photoBackRes="http://localhost:9090/resBk/";
@@ -61,6 +66,12 @@ public class WebSocketServer {
 
     }
     public void sendMessage(String message,Session toSession){
+        com.application.backend.entity.table.Message msg=new com.application.backend.entity.table.Message();
+        JSONObject json=JSONObject.parseObject(message);
+        msg.setSend(Integer.parseInt(json.getString("from")));
+        msg.setAccept(Integer.parseInt(json.getString("to")));
+        msg.setMessage(json.getString("message"));
+        Result result = messageService.historyMessage(msg);
         try {
             toSession.getBasicRemote().sendText(message);
         } catch (IOException e) {

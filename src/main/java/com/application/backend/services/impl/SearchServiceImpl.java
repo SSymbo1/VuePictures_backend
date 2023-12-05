@@ -1,10 +1,10 @@
 package com.application.backend.services.impl;
 
 import cn.hutool.core.date.DateUtil;
-import com.application.backend.entity.Artworks;
-import com.application.backend.entity.Favorite;
-import com.application.backend.entity.Follow;
-import com.application.backend.entity.UserInfo;
+import com.application.backend.entity.table.Artworks;
+import com.application.backend.entity.table.Favorite;
+import com.application.backend.entity.table.Follow;
+import com.application.backend.entity.table.UserInfo;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.UserInfoMapper;
 import com.application.backend.mapper.UserMapper;
@@ -122,7 +122,6 @@ public class SearchServiceImpl implements SearchService{
         List<UserInfo> userInfos=userInfoMapper.queryFansUserInfo(uid);
         if (!userInfos.isEmpty()){
             List<Follow> follows=userMapper.queryUserFollow(uid);
-            System.out.println(follows);
             if (!"".equals(keyword) && keyword != null) {
                 userInfos = userInfoMapper.queryFansUserInfoByKeyword(uid, keyword);
             }

@@ -1,7 +1,7 @@
 package com.application.backend.controller;
 
-import com.application.backend.entity.Artworks;
-import com.application.backend.entity.UserInfo;
+import com.application.backend.entity.table.Artworks;
+import com.application.backend.entity.table.UserInfo;
 import com.application.backend.services.SearchService;
 import com.application.backend.services.impl.SearchServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;

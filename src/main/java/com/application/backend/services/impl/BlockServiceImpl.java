@@ -1,6 +1,6 @@
 package com.application.backend.services.impl;
 
-import com.application.backend.entity.Block;
+import com.application.backend.entity.table.Block;
 import com.application.backend.entity.Result;
 import com.application.backend.mapper.BlockMapper;
 import com.application.backend.mapper.UserMapper;

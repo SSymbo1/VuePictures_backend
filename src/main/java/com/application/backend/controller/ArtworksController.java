@@ -1,6 +1,7 @@
 package com.application.backend.controller;
 
 import com.application.backend.entity.*;
+import com.application.backend.entity.table.Artworks;
 import com.application.backend.services.ArtworkService;
 import com.application.backend.services.impl.ArtworkServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -67,7 +68,7 @@ public class ArtworksController {
         return artworkService.getUserArtworks(uid);
     }
     @GetMapping("/getFavorite") //根据用户id返回用户收藏的插画
-    public List<Artworks> getFavorite(int uid,String token){
+    public List<Artworks> getFavorite(int uid, String token){
         return artworkService.getFavoriteArtworks(uid,token);
     }
     @PostMapping("/submit") //用户投稿

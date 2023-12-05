@@ -1,11 +1,15 @@
 package com.application.backend.services.impl;
 
 import com.application.backend.entity.*;
+import com.application.backend.entity.table.User;
+import com.application.backend.entity.table.UserInfo;
 import com.application.backend.mapper.UserInfoMapper;
 import com.application.backend.mapper.UserMapper;
 import com.application.backend.services.UserService;
 import com.application.backend.utils.FileUploadUtil;
 import com.application.backend.utils.JwtUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -140,5 +144,40 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean getFollowStatue(int uid, int fan) {
         return userMapper.queryFollow(uid, fan).isEmpty();
+    }
+
+    @Override
+    public IPage<UserInfo> getFollowUserInfo(String token,int pageNum) {
+        int pageSize=9;
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        IPage<UserInfo> ipage=new Page<>();
+        ipage.setCurrent(pageNum);
+        ipage.setSize(pageSize);
+        List<UserInfo> userInfos=userInfoMapper.queryUserInfoFollowed(uid);
+        if (!userInfos.isEmpty()){
+            ipage.setTotal(userInfos.size());
+            ipage.setPages((int)Math.ceil((double)ipage.getTotal()/ipage.getSize()));
+            ipage.setRecords(userInfos.subList((pageNum-1)*pageSize,Math.min(pageNum*pageSize,userInfos.size())));
+            for (UserInfo userInfo:userInfos){
+                userInfo.setBackground(photoBackRes+userInfo.getBackground());
+                userInfo.setUserimage(resUserCompressed+userInfo.getUserimage());
+            }
+        }else {
+            ipage.setTotal(0);
+            ipage.setPages(0);
+            ipage.setRecords(new ArrayList<>());
+        }
+        return ipage;
+    }
+
+    @Override
+    public List<Integer> getFollowUserInfo(String token) {
+        int uid=userMapper.queryUser(JwtUtil.parseJWT(token).getSubject()).get(0).getUid();
+        List<UserInfo> userInfos=userInfoMapper.queryUserInfoFollowed(uid);
+        List<Integer> userIds=new ArrayList<>();
+        for (UserInfo userInfo:userInfos){
+            userIds.add(userInfo.getIid());
+        }
+        return userIds;
     }
 }

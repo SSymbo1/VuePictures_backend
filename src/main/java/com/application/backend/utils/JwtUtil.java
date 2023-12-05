@@ -9,7 +9,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    private static final String secret = "bcz*-ikLjbfhayu@821461!@%3BUGhg";
+    private static final String secret = "aghebndkfcvw@#*_.0123456789";
     private static final long expire=604800;
     public static String createJWT(String username) {
         Date now=new Date();

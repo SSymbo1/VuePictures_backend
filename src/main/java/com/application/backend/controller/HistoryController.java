@@ -1,6 +1,6 @@
 package com.application.backend.controller;
 
-import com.application.backend.entity.History;
+import com.application.backend.entity.table.History;
 import com.application.backend.entity.Result;
 import com.application.backend.services.HistoryService;
 import com.application.backend.services.impl.HistoryServiceImpl;

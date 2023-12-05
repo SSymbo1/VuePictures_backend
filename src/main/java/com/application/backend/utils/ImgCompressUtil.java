@@ -9,25 +9,27 @@ import java.io.File;
 import java.io.IOException;
 @Component
 public class ImgCompressUtil {
-    private static final String COMPRESSED_ARTWORKS_PATH="D:\\SpringWebData\\Compress\\Res";
-    private static final String COMPRESSED_USER_PATH="D:\\SpringWebData\\Compress\\UserImg";
-    private static final String COMPRESSED_BACK_PATH="D:\\SpringWebData\\Compress\\UserBK";
-    private static final String COMPRESSED_TEMP_PATH="D:\\SpringWebData\\Compress\\temp";
     public static void imgSizeCompress(String fileName,String rote) throws IOException {
         switch (rote) {
             case "D:\\SpringWebData\\UserBk":
-                imageResolutionCompress(fileName,COMPRESSED_BACK_PATH,rote,1441,250);
+                imageResolutionCompress(fileName,ResUrl.USER_BACKGROUND_IMAGE_COMPRESS_PATH,rote,1441,250);
                 //convert(fileName,COMPRESSED_BACK_PATH,rote);
                 break;
             case "D:\\SpringWebData\\UserImg":
-                imageResolutionCompress(fileName,COMPRESSED_USER_PATH,rote,720,720);
+                imageResolutionCompress(fileName,ResUrl.USER_TITLE_IMAGE_COMPRESS_PATH,rote,720,720);
                 //convert(fileName,COMPRESSED_USER_PATH,rote);
                 break;
             case "D:\\SpringWebData\\Res":
-                imageResolutionCompress(fileName,COMPRESSED_ARTWORKS_PATH,rote,1040,600);
+                imageResolutionCompress(fileName,ResUrl.USER_SUBMIT_ARTWORK_COMPRESS_PATH,rote,1040,600);
                 //convert(fileName,COMPRESSED_ARTWORKS_PATH,rote);
                 break;
         }
+    }
+    private static void imageResolutionCompress(String fileNane,String url,String rote,int x,int y) throws IOException {
+        Thumbnails.of(new File(rote+"\\"+fileNane))
+                .size(x,y)
+                .outputQuality(1)
+                .toFile(url+"\\"+fileNane);
     }
     /*private static void convert(String fileName,String rote,String url){
         String convertFile;
@@ -47,12 +49,6 @@ public class ImgCompressUtil {
         }
         flushTemp();
     }*/
-    private static void imageResolutionCompress(String fileNane,String url,String rote,int x,int y) throws IOException {
-        Thumbnails.of(new File(rote+"\\"+fileNane))
-                .size(x,y)
-                .outputQuality(1)
-                .toFile(url+"\\"+fileNane);
-    }
     /*private static void flushTemp(){
         File[] files=new  File(COMPRESSED_TEMP_PATH).listFiles();
         if (files != null) {

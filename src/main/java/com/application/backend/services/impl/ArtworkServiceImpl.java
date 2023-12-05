@@ -1,8 +1,8 @@
 package com.application.backend.services.impl;
 
-import com.application.backend.entity.Artworks;
+import com.application.backend.entity.table.Artworks;
 import com.application.backend.entity.Creative;
-import com.application.backend.entity.Favorite;
+import com.application.backend.entity.table.Favorite;
 import com.application.backend.entity.Result;
 import com.application.backend.mapper.ArtWorkMapper;
 import com.application.backend.mapper.UserMapper;

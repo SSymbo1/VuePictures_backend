@@ -1,6 +1,6 @@
 package com.application.backend.mapper;
 
-import com.application.backend.entity.Block;
+import com.application.backend.entity.table.Block;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;

@@ -1,7 +1,7 @@
 package com.application.backend.mapper;
 
-import com.application.backend.entity.Artworks;
-import com.application.backend.entity.Favorite;
+import com.application.backend.entity.table.Artworks;
+import com.application.backend.entity.table.Favorite;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 import java.util.List;

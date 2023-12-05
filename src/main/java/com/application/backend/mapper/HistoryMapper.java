@@ -1,6 +1,6 @@
 package com.application.backend.mapper;
 
-import com.application.backend.entity.History;
+import com.application.backend.entity.table.History;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.*;
 

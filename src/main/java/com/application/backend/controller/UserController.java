@@ -1,13 +1,14 @@
 package com.application.backend.controller;
 
 import com.application.backend.entity.Result;
-import com.application.backend.entity.User;
-import com.application.backend.entity.UserInfo;
+import com.application.backend.entity.table.User;
+import com.application.backend.entity.table.UserInfo;
 import com.application.backend.services.BlockService;
 import com.application.backend.services.UserService;
 import com.application.backend.services.impl.BlockServiceImpl;
 import com.application.backend.services.impl.UserServiceImpl;
 import com.application.backend.utils.JwtUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -87,4 +88,12 @@ public class UserController {
     List<Integer> getAllUserBlocker(String token){
         return blockService.getUserBlocker(token);
     }
+    @GetMapping("/getChatUser")
+    IPage<UserInfo> getFollowedUserInfo(String token,int pageNum){
+        return userService.getFollowUserInfo(token, pageNum);
+    }
+    @GetMapping("/getChatUserAll")
+    List<Integer> getAllUserFriends(String token){
+        return userService.getFollowUserInfo(token);
+    };
 }
