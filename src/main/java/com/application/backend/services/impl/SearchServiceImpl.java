@@ -26,10 +26,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class SearchServiceImpl implements SearchService{
-    /*@Value(("${web.picture-data-res-path}"))
-    private String artWorksRes;
-    @Value(("${web.user-photo-res-path}"))
-    private String photoRes;*/
     @Value(("${web.user-background-res-path}"))
     private String photoBackRes;
     @Value(("${web.picture-data-res-path-compressed}"))

@@ -32,10 +32,4 @@ public class InterceptorConfig implements WebMvcConfigurer {
                 .addResourceLocations("file:///"+"D:"+"/SpringWebData"+"/Compress"+"/UserImg/");
         System.out.println("file:///"+"D:"+"/SpringWebData"+"/Compress"+"/UserImg/");
     }
-
-    /*private String getJarFilePath() {
-        ApplicationHome home = new ApplicationHome(getClass());
-        File jarFile = home.getSource();
-        return jarFile.getParentFile().toString();
-    }*/
 }

@@ -37,12 +37,6 @@ public class ArtworkServiceImpl implements ArtworkService {
     protected String artWorksRes;
     @Value(("${web.picture-data-res-path-compressed}"))
     protected String resCompressed;
-    /*private String getJarFilePath() {
-        ApplicationHome home = new ApplicationHome(getClass());
-        File jarFile = home.getSource();
-        return jarFile.getParentFile().toString();
-    }*/
-
     /***
      * 查询VuePictures里所有插画
      * @return 所有插画的集合

@@ -19,7 +19,7 @@ spring:
   session:
     store-type: none
   mail:
-    host: smtp.office365.com
+    host: smtp-mail.outlook.com
     port: 587
     protocol: smtp
     default-encoding: UTF-8

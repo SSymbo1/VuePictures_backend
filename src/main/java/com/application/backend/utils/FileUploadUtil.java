@@ -12,11 +12,6 @@ import java.util.UUID;
 @Slf4j
 @Component
 public class FileUploadUtil {
-    /*private String getJarFilePath() {
-        ApplicationHome home = new ApplicationHome(getClass());
-        File jarFile = home.getSource();
-        return jarFile.getParentFile().toString();
-    }*/
     public Result uploadUserBackground(MultipartFile file){
         createFolderIfNotExist(ResUrl.USER_BACKGROUND_IMAGE_PATH);
         String filName= getUUIDFileName(file);
